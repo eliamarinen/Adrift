@@ -31,3 +31,8 @@ Auto-update is not yet avalible, since that needs a hosted update server.
 - Per-space pins, folders, bookmarks (from Zen / Arc)
 - Space switching, drag/drop, cross-space tab search (from Zen / Arc)
 - Zen profile importer (Arc importing is harder and is planned)
+
+## Features
+- Cool sidebar-based design
+- Based on the legendary Helium browser
+- No AI features
