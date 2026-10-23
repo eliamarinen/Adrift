@@ -15,7 +15,7 @@ Adrift is being developed with the help of AI, but is actively reviewed by me fo
 
 Non of the writings here or design assets are made by AI.
 
-> It is really important to see what is the AI changing in the software, that is why everything is layed out for me on a private Github Project that I review manually. If someone is working with AI, transparency is important.
+> It is really important to see what the AI is changing in the software. That is why everything is laid out for me in a private GitHub Project, where I manually review the changes and their contents before testing the software on my Mac. When working with AI, transparency is key.
 
 The software is still in it's early stages and fixes are rolling out nearly every day.
 Auto-update is not yet avalible, since that needs a hosted update server.
