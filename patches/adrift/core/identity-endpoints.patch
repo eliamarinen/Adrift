@@ -1,0 +1,75 @@
+--- a/content/public/common/url_constants.h
++++ b/content/public/common/url_constants.h
+@@ -19,7 +19,7 @@
+ inline constexpr char kChromeDevToolsScheme[] = "devtools";
+ inline constexpr char kChromeErrorScheme[] = "chrome-error";
+ inline constexpr char kChromeUIScheme[] = "chrome";  // Used for WebUIs.
+-inline constexpr char kHeliumUIScheme[] = "helium";  // also used for webuis :3
++inline constexpr char kHeliumUIScheme[] = "adrift";  // Adrift WebUI alias
+ inline constexpr char kChromeNativeScheme[] = "chrome-native";
+ inline constexpr char kChromeUIUntrustedScheme[] = "chrome-untrusted";
+ inline constexpr char kViewSourceScheme[] = "view-source";
+--- a/chrome/browser/resources/tab_search/tab_search_item.ts
++++ b/chrome/browser/resources/tab_search/tab_search_item.ts
+@@ -216,8 +216,8 @@
+ 
+     // Show chrome:// if it's a chrome internal url
+     const protocol = new URL(normalizeURL(data.tab.url)).protocol;
+-    if (protocol === 'chrome:' || protocol === 'helium:') {
+-      this.$.secondaryTextInner.prepend(document.createTextNode('helium://'));
++    if (protocol === 'chrome:' || protocol === 'adrift:') {
++      this.$.secondaryTextInner.prepend(document.createTextNode('adrift://'));
+     }
+   }
+ 
+--- a/components/helium_services/helium_services_helpers.cc
++++ b/components/helium_services/helium_services_helpers.cc
+@@ -28,10 +28,11 @@
+ #endif
+ 
+ #if defined(UPDATES_SUPPORTED)
+-constexpr std::string_view kUpdateBaseUrl = "https://updates.helium.computer/";
++constexpr std::string_view kUpdateBaseUrl =
++    "https://github.com/eliamarinen/adrift-macos/releases/latest/download/";
+ constexpr const char kUpdatePath[] =
+ #if BUILDFLAG(IS_MAC)
+-    "mac/appcast-" CPU_ARCH_STR ".xml";
++    "appcast-" CPU_ARCH_STR ".xml";
+ #elif BUILDFLAG(IS_WIN)
+     "win/appcast.xml";
+ #endif
+--- a/components/crash/core/app/crash_reporter_client.cc
++++ b/components/crash/core/app/crash_reporter_client.cc
+@@ -154,7 +154,9 @@
+ #endif
+ 
+ #if defined(OFFICIAL_BUILD)
+-  return "https://crash.helium.computer/crash";
++  // Adrift does not operate a crash ingestion service yet. Reports stay local
++  // unless a custom crash server is supplied for development.
++  return std::string();
+ #else
+   return std::string();
+ #endif
+--- a/components/crash/core/browser/resources/crashes.ts
++++ b/components/crash/core/browser/resources/crashes.ts
+@@ -223,7 +223,7 @@
+     os,
+     additional: commentLines.join('\n'),
+   };
+-  let href = 'https://github.com/imputnet/helium/issues/new';
++  let href = 'https://github.com/eliamarinen/adrift-macos/issues/new';
+   for (const param in params) {
+     href = appendParam(href, param, params[param]!);
+   }
+--- a/chrome/browser/prefs/browser_prefs.cc
++++ b/chrome/browser/prefs/browser_prefs.cc
+@@ -1536,7 +1536,7 @@
+   BrowserProcessImpl::RegisterPrefs(registry);
+   registry->RegisterIntegerPref(
+       prefs::kHeliumCrashReportingMode,
+-      static_cast<int>(helium::CrashReportingMode::kAsk));
++      static_cast<int>(helium::CrashReportingMode::kDisabled));
+   ChromeContentBrowserClient::RegisterLocalStatePrefs(registry);
+ #if BUILDFLAG(CHROME_FOR_TESTING)
+   chrome_for_testing::RegisterPrefs(registry);
